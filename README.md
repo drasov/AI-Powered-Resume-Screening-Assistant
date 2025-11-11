@@ -6,19 +6,19 @@ The shift of AI driven screening is not a far cry anymore, by the end of 2025, 8
 
 3.0 Our Solution: An Intelligent and Context-Aware AI Assistant
 Our group is developing an AI powered resumé screening assistant that applies NLP (Natural Language Processing) and ML (Machine Learning) to push past the rigid, keyword based filters[6] seen in current screening processes. Our system is designed to not only comprehend the context of the user's experience, but also infer their proficiency. For example, a sentence read as “Created & deployed a single-page application using React,” will have the assistant understand that  the user knows React, JS, and CSS; knows how CI/CD works and knows how to deploy a project. This will allow for identifying transferable skills and creating a more accurate assessment of each applicant[7]. The core to our solution lies in the ability to extract key details and parse through important information such as skills and experience, while also ranking candidates based on a series of conditions to best find a true match for the job’s requirements[8].
+
 4.0 Technology Stack: Built on a Modern, Robust Foundation
 We will build this solution using a proven, professional technology stack:
+- Core AI & NLP: We will utilize spaCy for efficient Named Entity Recognition (NER) to extract skills, qualifications, and experience. We will also explore fine tuning a BERT-class model for superior semantic understanding, moving beyond simple keyword matching[9].
+- Frameworks & Development: Python will serve as the core language, with Flask or FastAPI for the backend API and React for an intuitive frontend user interface.
+- Data & Storage: Pandas will be used for data manipulation and MongoDB or PostgreSQL for secure data storage.
 
-Core AI & NLP: We will utilize spaCy for efficient Named Entity Recognition (NER) to extract skills, qualifications, and experience. We will also explore fine tuning a BERT-class model for superior semantic understanding, moving beyond simple keyword matching[9].
-Frameworks & Development: Python will serve as the core language, with Flask or FastAPI for the backend API and React for an intuitive frontend user interface.
-Data & Storage: Pandas will be used for data manipulation and MongoDB or PostgreSQL for secure data storage.
 5.0 System Architecture: A Cohesive and Scalable Workflow
 The system is designed with a clear, modular architecture for reliability and scalability:
-
-Frontend (React Web Application): A clean, intuitive dashboard for recruiters to upload job descriptions and resumés.
-Backend (Flask/FastAPI Server): The engine that handles requests, processes files, and manages communication between the frontend and the AI model.
-AI Model (NLP Engine): The core intelligence that analyzes text, extracts skills, and calculates match scores using machine learning algorithms[10].
-Database (MongoDB/PostgreSQL): Securely stores anonymized applicant data and matching results.
+1. Frontend (React Web Application): A clean, intuitive dashboard for recruiters to upload job descriptions and resumés.
+2. Backend (Flask/FastAPI Server): The engine that handles requests, processes files, and manages communication between the frontend and the AI model.
+3. AI Model (NLP Engine): The core intelligence that analyzes text, extracts skills, and calculates match scores using machine learning algorithms[10].
+4. Database (MongoDB/PostgreSQL): Securely stores anonymized applicant data and matching results.
 
 Data Flow: Recruiter Uploads Data -> Backend Preprocesses Text -> AI Model Analyzes & Compares -> Backend Ranks Candidates -> Results Displayed on Dashboard
 6.0 Data and Ethical Considerations: Building a Responsible Tool
