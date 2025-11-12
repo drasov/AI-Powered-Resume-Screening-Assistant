@@ -11,7 +11,7 @@ df = pd.read_csv(file_path).head(20)
 df_anonymized = df.copy()
 
 # Regex patterns for anonymization
-Email = re.compile(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}')
+Email = re.compile(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}') 
 Name = re.compile(r'(?<=Name:\s).*?(?=\n|$)')
 Phone = re.compile(r'(?<=Phone:\s).*?(?=\n|$)')
 Address = re.compile(r'(?<=Address:\s).*?(?=\n|$)')
