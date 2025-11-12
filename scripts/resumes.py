@@ -29,14 +29,9 @@ def anonymize_resume(resume_text: str) -> str:
     return resume_text
 
 # # Apply anonymization
-# for col in df_anonymized.columns:
-#     df_anonymized[col] = df_anonymized[col].astype(str).apply(anonymize_resume)
+for col in df_anonymized.columns:
+    df_anonymized[col] = df_anonymized[col].astype(str).apply(anonymize_resume)
 
-# # Save anonymized resumes
-# df_anonymized.to_csv(file_path_anonymized, index=False)
-# print("Anonymized resumes saved to:", file_path_anonymized)
-
-for i, row in df.iterrows():
-    print(f"\n--- Resume {i+1} ---")
-    print("\nAnonymized:\n", anonymize_resume(row['resume_text']))
-    print("-----------------------------\n")
+# Save anonymized resumes
+df_anonymized.to_csv(file_path_anonymized, index=False)
+print("Anonymized resumes saved to:", file_path_anonymized)
