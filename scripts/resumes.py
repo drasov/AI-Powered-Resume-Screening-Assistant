@@ -15,7 +15,7 @@ Email = re.compile(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}')
 Name = re.compile(r'(?<=Name:\s).*?(?=\n|$)')
 Phone = re.compile(r'(?<=Phone:\s).*?(?=\n|$)')
 Address = re.compile(r'(?<=Address:\s).*?(?=\n|$)')
-
+ 
 URL = re.compile(r'(https?://[^\s]+)')
 
 # Anonymization function
