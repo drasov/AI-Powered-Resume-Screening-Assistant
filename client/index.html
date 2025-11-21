@@ -1,0 +1,709 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI-Powered Resume Screening</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-elevated: #020817;
+      --bg-card: #020617;
+      --border-subtle: #1f2937;
+      --accent: #3b82f6;
+      --accent-soft: rgba(59, 130, 246, 0.15);
+      --accent-strong: #2563eb;
+      --text: #e5e7eb;
+      --text-muted: #9ca3af;
+      --danger: #f97373;
+      --success: #4ade80;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #0b1120, #020617);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 1100px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      gap: 1rem;
+    }
+
+    .title-block h1 {
+      margin: 0;
+      font-size: 1.8rem;
+      letter-spacing: 0.03em;
+    }
+
+    .title-block p {
+      margin: 0.25rem 0 0;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .badge {
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid var(--border-subtle);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      background: rgba(15, 23, 42, 0.9);
+      white-space: nowrap;
+    }
+
+    .layout-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: 1.25rem;
+    }
+
+    @media (max-width: 900px) {
+      .layout-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .card {
+      background: linear-gradient(145deg, #020617, #020817);
+      border-radius: 14px;
+      border: 1px solid var(--border-subtle);
+      padding: 1.25rem 1.4rem;
+      box-shadow:
+        0 18px 45px rgba(0, 0, 0, 0.55),
+        0 0 0 1px rgba(148, 163, 184, 0.04);
+    }
+
+    .card h2 {
+      margin-top: 0;
+      margin-bottom: 0.25rem;
+      font-size: 1.15rem;
+    }
+
+    .card > p {
+      margin-top: 0;
+      margin-bottom: 1rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    label {
+      display: inline-block;
+      margin-bottom: 0.25rem;
+      font-size: 0.86rem;
+      font-weight: 500;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 110px;
+      padding: 0.6rem 0.7rem;
+      margin-bottom: 0.75rem;
+      font-family: inherit;
+      font-size: 0.9rem;
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+      background: radial-gradient(circle at top left, #020617, #020617);
+      color: var(--text);
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent-soft);
+      background: radial-gradient(circle at top left, #020617, #020617);
+    }
+
+    small {
+      display: block;
+      margin-bottom: 0.4rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    input[type="file"] {
+      margin-top: 0.25rem;
+      margin-bottom: 0.75rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .inline-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    input[type="checkbox"] {
+      cursor: pointer;
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent-strong);
+    }
+
+    .btn-primary {
+      padding: 0.55rem 1.3rem;
+      cursor: pointer;
+      border-radius: 999px;
+      border: none;
+      background: radial-gradient(circle at top left, var(--accent), var(--accent-strong));
+      color: #f9fafb;
+      font-weight: 500;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      box-shadow:
+        0 10px 25px rgba(59, 130, 246, 0.35),
+        0 0 0 1px rgba(37, 99, 235, 0.3);
+      transition: transform 0.08s ease, box-shadow 0.08s ease, opacity 0.08s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      opacity: 0.96;
+      box-shadow:
+        0 14px 32px rgba(59, 130, 246, 0.45),
+        0 0 0 1px rgba(37, 99, 235, 0.35);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+      box-shadow:
+        0 8px 18px rgba(59, 130, 246, 0.3),
+        0 0 0 1px rgba(37, 99, 235, 0.4);
+    }
+
+    .btn-primary span.icon {
+      font-size: 1rem;
+    }
+
+    /* inline status (kept very minimal now) */
+    .status {
+      margin-top: 0.75rem;
+      font-size: 0.82rem;
+      min-height: 1.2rem;
+      color: var(--text-muted);
+    }
+
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .results-header small {
+      margin: 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.25rem;
+      font-size: 0.85rem;
+    }
+
+    thead tr {
+      background: #020617;
+    }
+
+    th, td {
+      border: 1px solid var(--border-subtle);
+      padding: 0.5rem 0.55rem;
+      vertical-align: top;
+    }
+
+    th {
+      text-align: left;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    tbody tr:nth-child(odd) {
+      background: #020617;
+    }
+
+    tbody tr:nth-child(even) {
+      background: #020617;
+    }
+
+    .score {
+      font-weight: 600;
+      color: #bfdbfe;
+    }
+
+    .index-pill {
+      display: inline-block;
+      padding: 0.1rem 0.45rem;
+      border-radius: 999px;
+      border: 1px solid var(--border-subtle);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.15rem;
+    }
+
+    .muted-row {
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    .results-scroll {
+      max-height: 449px;
+      overflow-y: auto;
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .results-scroll table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .results-scroll th,
+    .results-scroll td {
+      border: 1px solid var(--border-subtle);
+    }
+
+    /* Toast notifications */
+    .toast-container {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      z-index: 9999;
+    }
+
+    .toast {
+      min-width: 260px;
+      max-width: 360px;
+      padding: 0.6rem 0.75rem;
+      border-radius: 12px;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      background: rgba(15, 23, 42, 0.98);
+      font-size: 0.85rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      box-shadow:
+        0 18px 35px rgba(0, 0, 0, 0.6),
+        0 0 0 1px rgba(15, 23, 42, 0.9);
+      transform: translateY(10px);
+      opacity: 0;
+      animation: toast-in 0.16s ease-out forwards;
+    }
+
+    .toast-error {
+      border-color: rgba(248, 113, 113, 0.5);
+      color: var(--danger);
+    }
+
+    .toast-dot {
+      margin-top: 0.2rem;
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--danger);
+      flex-shrink: 0;
+    }
+
+    .toast-message {
+      flex: 1;
+      line-height: 1.4;
+    }
+
+    .toast-close {
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 0 0 0 0.25rem;
+      line-height: 1;
+    }
+
+    .toast-close:hover {
+      color: var(--text);
+    }
+
+    .toast-hide {
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.15s ease-out, transform 0.15s ease-out;
+    }
+
+    @keyframes toast-in {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="header">
+      <div class="title-block">
+        <h1>AI-Powered Resume Screening</h1>
+        <p>Paste or upload resumes, anonymize them, and rank candidates against your job description.</p>
+      </div>
+      <div class="badge">DPS970 - Group 6</div>
+    </header>
+
+    <div class="layout-grid">
+      <!-- INPUT CARD -->
+      <section class="card">
+        <h2>1. Input</h2>
+        <p>Provide a job description and resumes. You can paste resumes manually or upload a CSV file.</p>
+
+        <label for="job-description">Job Description</label>
+        <small>Paste the full job posting or role summary that candidates will be ranked against.</small>
+        <textarea id="job-description" placeholder="Paste the job description here..."></textarea>
+
+        <label for="resumes-input">Resumes (manual paste)</label>
+        <small>Separate multiple resumes using a line that contains only <code>---</code>.</small>
+        <textarea id="resumes-input" placeholder="Paste resumes here...&#10;---&#10;Second resume..."></textarea>
+
+        <label for="csv-file">Or upload resumes CSV</label>
+        <small>The <em>last column</em> in the CSV is treated as the resume text.</small>
+        <input type="file" id="csv-file" accept=".csv" />
+
+        <div class="inline-row" style="margin-top: 0.4rem;">
+          <div class="checkbox-row">
+            <input type="checkbox" id="anonymize" checked />
+            <span>Anonymize resumes before scoring</span>
+          </div>
+          <button id="rank-btn" class="btn-primary" type="button">
+            <span>Rank Resumes</span>
+          </button>
+        </div>
+
+        <div id="status" class="status muted"></div>
+      </section>
+
+      <!-- RESULTS CARD -->
+      <section class="card">
+        <div class="results-header">
+          <div>
+            <h2>2. Results</h2>
+            <small>Highest-ranked resume appears first.</small>
+          </div>
+        </div>
+
+        <div class="results-scroll">
+          <table id="results-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Similarity</th>
+                <th>Resume Text</th>
+              </tr>
+            </thead>
+            <tbody id="results-body">
+              <tr class="muted-row">
+                <td colspan="3">No results yet. Submit a job description and resumes.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Download button at bottom-right of results card -->
+        <div style="margin-top: 0.75rem; display: flex; justify-content: flex-end;">
+          <button id="download-btn" class="btn-primary" type="button">
+            <span>Download CSV</span>
+          </button>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Toast notifications -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <script>
+    const API_URL_JSON = "http://127.0.0.1:8000/api/resumes/rank";
+    const API_URL_CSV = "http://127.0.0.1:8000/api/resumes/rank-from-csv";
+    const DOWNLOAD_CSV_URL = "http://127.0.0.1:8000/api/resumes/download-last-csv";
+
+    let lastResults = null;         // ranked_resumes array
+    let lastResultsSource = null;   // "manual" or "csv"
+
+    const toastContainer = document.getElementById("toast-container");
+
+    function showToast(message, type = "error") {
+      if (!toastContainer) return;
+
+      const toast = document.createElement("div");
+      toast.className = `toast toast-${type}`;
+
+      toast.innerHTML = `
+        <div class="toast-dot"></div>
+        <div class="toast-message">${message}</div>
+        <button class="toast-close" aria-label="Dismiss">&times;</button>
+      `;
+
+      const closeBtn = toast.querySelector(".toast-close");
+      closeBtn.addEventListener("click", () => {
+        toast.classList.add("toast-hide");
+        setTimeout(() => toast.remove(), 160);
+      });
+
+      toastContainer.appendChild(toast);
+
+      // Auto-dismiss after 5 seconds
+      setTimeout(() => {
+        if (!toast.isConnected) return;
+        toast.classList.add("toast-hide");
+        setTimeout(() => toast.remove(), 160);
+      }, 5000);
+    }
+
+    function parseResumes(raw) {
+      return raw
+        .split(/^---$/m)        // split at lines that are exactly ---
+        .map(r => r.trim())
+        .filter(r => r.length > 0);
+    }
+
+    function renderResults(data, statusEl, resultsBody) {
+      resultsBody.innerHTML = "";
+
+      if (!data.ranked_resumes || data.ranked_resumes.length === 0) {
+        resultsBody.innerHTML =
+          "<tr class='muted-row'><td colspan='3'>No results returned.</td></tr>";
+        lastResults = null;
+        return;
+      }
+
+      // store sorted list
+      lastResults = data.ranked_resumes;
+
+      data.ranked_resumes.forEach((item, idx) => {
+        const tr = document.createElement("tr");
+
+        const rankCell = document.createElement("td");
+        rankCell.textContent = idx + 1;
+
+        const scoreCell = document.createElement("td");
+        scoreCell.innerHTML =
+          `<span class="score">${item.similarity.toFixed(3)}</span><br/>` +
+          `<span class="index-pill">Original index: ${item.index}</span>`;
+
+        const textCell = document.createElement("td");
+        textCell.textContent = item.resume_text;
+
+        tr.appendChild(rankCell);
+        tr.appendChild(scoreCell);
+        tr.appendChild(textCell);
+
+        resultsBody.appendChild(tr);
+      });
+
+      // on success, keep status subtle/empty
+      statusEl.textContent = "";
+    }
+
+    async function handleRankClick() {
+      const jobDescriptionEl = document.getElementById("job-description");
+      const resumesEl = document.getElementById("resumes-input");
+      const anonymizeEl = document.getElementById("anonymize");
+      const fileInput = document.getElementById("csv-file");
+      const statusEl = document.getElementById("status");
+      const resultsBody = document.getElementById("results-body");
+
+      statusEl.textContent = "";
+
+      const jobDescription = jobDescriptionEl.value.trim();
+      if (!jobDescription) {
+        showToast("Please enter a job description.");
+        return;
+      }
+
+      const hasCsv = fileInput.files.length > 0;
+      const anonymize = anonymizeEl.checked;
+
+      try {
+        let response;
+
+        if (hasCsv) {
+          // CSV flow
+          const formData = new FormData();
+          formData.append("file", fileInput.files[0]);
+          formData.append("job_description", jobDescription);
+          formData.append("anonymize", anonymize ? "true" : "false");
+
+          response = await fetch(API_URL_CSV, {
+            method: "POST",
+            body: formData
+          });
+
+          lastResultsSource = "csv";
+        } else {
+          // Manual paste flow
+          const rawResumes = resumesEl.value.trim();
+          if (!rawResumes) {
+            showToast("Please paste resumes or upload a CSV file.");
+            return;
+          }
+
+          const resumes = parseResumes(rawResumes);
+          if (resumes.length === 0) {
+            showToast("Could not detect any resumes. Check the --- separators.");
+            return;
+          }
+
+          const payload = {
+            job_description: jobDescription,
+            resumes: resumes,
+            anonymize: anonymize
+          };
+
+          response = await fetch(API_URL_JSON, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json"
+            },
+            body: JSON.stringify(payload)
+          });
+
+          lastResultsSource = "manual";
+        }
+
+        if (!response.ok) {
+          let message = `Error ${response.status}`;
+          try {
+            const body = await response.json();
+            if (body.detail) message += `: ${body.detail}`;
+          } catch {
+            const errText = await response.text();
+            if (errText) message += `: ${errText}`;
+          }
+          showToast(message);
+          return;
+        }
+
+        const data = await response.json();
+        renderResults(data, statusEl, resultsBody);
+      } catch (err) {
+        console.error(err);
+        showToast("Network or server error. Check console for details.");
+      }
+    }
+
+    async function downloadResultsAsCsv() {
+      const statusEl = document.getElementById("status");
+
+      if (!lastResults || lastResults.length === 0) {
+        showToast("No ranked results to download. Please rank resumes first.");
+        return;
+      }
+
+      try {
+        if (lastResultsSource === "csv") {
+          // Use backend CSV (all original columns + similarity)
+          const response = await fetch(DOWNLOAD_CSV_URL);
+          if (!response.ok) {
+            let message = `Error ${response.status}`;
+            try {
+              const body = await response.json();
+              if (body.detail) message += `: ${body.detail}`;
+            } catch {
+              const errText = await response.text();
+              if (errText) message += `: ${errText}`;
+            }
+            showToast(message);
+            return;
+          }
+
+          const blob = await response.blob();
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = "ranked_resumes.csv";
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+
+          statusEl.textContent = "";
+        } else {
+          // Manual mode: build simple CSV from lastResults
+          const header = ["rank", "original_index", "similarity", "resume_text"];
+          const rows = [header];
+
+          lastResults.forEach((item, idx) => {
+            const rank = idx + 1;
+            const originalIndex = item.index;
+            const similarity = item.similarity;
+            const resumeText = String(item.resume_text).replace(/"/g, '""');
+            rows.push([rank, originalIndex, similarity, `"${resumeText}"`]);
+          });
+
+          const csvContent = rows.map(r => r.join(",")).join("\n");
+          const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = "ranked_resumes_manual.csv";
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+
+          statusEl.textContent = "";
+        }
+      } catch (err) {
+        console.error(err);
+        showToast("Failed to download CSV. Check console for details.");
+      }
+    }
+
+    document.getElementById("rank-btn").addEventListener("click", (e) => {
+      e.preventDefault();
+      handleRankClick();
+    });
+
+    document.getElementById("download-btn").addEventListener("click", (e) => {
+      e.preventDefault();
+      downloadResultsAsCsv();
+    });
+  </script>
+</body>
+</html>
