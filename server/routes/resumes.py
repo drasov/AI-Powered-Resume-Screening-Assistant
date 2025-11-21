@@ -244,5 +244,5 @@ def download_last_csv():
         media_type="text/csv",
         headers={
             "Content-Disposition": 'attachment; filename="ranked_resumes.csv"'
-        },
+        }, 
     )
