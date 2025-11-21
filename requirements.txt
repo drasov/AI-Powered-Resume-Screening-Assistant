@@ -1,0 +1,15 @@
+# FastAPI + Server
+fastapi
+uvicorn[standard]
+
+# Core AI / NLP
+sentence-transformers
+torch
+numpy
+scikit-learn
+
+# Data Handling
+pandas
+
+# Utilities
+python-dotenv
