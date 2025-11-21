@@ -13,3 +13,6 @@ pandas
 
 # Utilities
 python-dotenv
+
+# File Upload Handling
+python-multipart
